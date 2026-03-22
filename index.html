@@ -238,6 +238,119 @@
       padding: 10px;
     }
 
+    .leaderboard-table .player-name {
+      font-weight: 600;
+      color: #27455C;
+    }
+
+    .leaderboard-table tbody tr:nth-child(1) td {
+      background: linear-gradient(90deg, rgba(212,168,67,0.12) 0%, transparent 60%);
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: #888;
+      margin: -15px 0 25px 0;
+      font-style: italic;
+    }
+
+    /* Heatmap */
+    .heatmap-container {
+      overflow-x: auto;
+      margin-top: 15px;
+    }
+
+    .heatmap-container table {
+      margin: 0 auto;
+    }
+
+    /* Swing Games */
+    .swing-game-row {
+      display: grid;
+      grid-template-columns: 200px 1fr 60px;
+      align-items: center;
+      gap: 15px;
+      padding: 12px 15px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .swing-game-row:last-child {
+      border-bottom: none;
+    }
+
+    .swing-game-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #27455C;
+    }
+
+    .swing-game-bar {
+      display: flex;
+      height: 28px;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #eee;
+    }
+
+    .swing-game-bar-half {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.8rem;
+      color: white;
+      min-width: 32px;
+    }
+
+    .swing-game-left {
+      background: #DC1A41;
+      flex: 1;
+    }
+
+    .swing-game-right {
+      background: #27455C;
+      flex: 1;
+    }
+
+    .swing-game-split {
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #666;
+      background: #F8F3F0;
+      padding: 4px 8px;
+      border-radius: 12px;
+    }
+
+    /* Game Card (Live Scoreboard) */
+    .game-card {
+      background: linear-gradient(135deg, #27455C 0%, #1a2f3f 100%);
+      border-radius: 8px;
+      padding: 30px;
+      text-align: center;
+      color: white;
+    }
+
+    .game-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .game-status {
+      font-size: 0.95rem;
+      opacity: 0.8;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 30px 0;
+      color: #999;
+      font-size: 0.85rem;
+    }
+
     .player-name {
       font-weight: 600;
       color: #DC1A41;
@@ -848,6 +961,10 @@
       </table>
     </div>
 
+    <div class="footer">
+      Elons Plugs 2026 — Updated March 22, 2026 — Built by TaylorDuran
+    </div>
+
   </div>
 
   <script>
@@ -860,22 +977,47 @@
       const standings = [{"rank":1,"name":"TaylorDuran","points":450,"percentile":99.42,"wins":37,"losses":6,"maxPoints":1810,"remainingPoints":1360,"r64Points":290,"r32Points":160,"champion":"ARIZ","championName":"Arizona Wildcats","competitorId":12,"chalk":81,"uniqueness":5},{"rank":2,"name":"Capn'Kirk","points":410,"percentile":80.69,"wins":33,"losses":9,"maxPoints":1810,"remainingPoints":1400,"r64Points":250,"r32Points":160,"champion":"DUKE","championName":"Duke Blue Devils","competitorId":150,"chalk":95,"uniqueness":0},{"rank":3,"name":"Fizzz3","points":400,"percentile":71.01,"wins":33,"losses":10,"maxPoints":1760,"remainingPoints":1360,"r64Points":260,"r32Points":140,"champion":"ARIZ","championName":"Arizona Wildcats","competitorId":12,"chalk":75,"uniqueness":10},{"rank":4,"name":"twnutt","points":390,"percentile":61.68,"wins":31,"losses":12,"maxPoints":1770,"remainingPoints":1380,"r64Points":230,"r32Points":160,"champion":"DUKE","championName":"Duke Blue Devils","competitorId":150,"chalk":81,"uniqueness":6},{"rank":5,"name":"Paul233365","points":380,"percentile":52.66,"wins":31,"losses":11,"maxPoints":1780,"remainingPoints":1400,"r64Points":240,"r32Points":140,"champion":"ARIZ","championName":"Arizona Wildcats","competitorId":12,"chalk":86,"uniqueness":3},{"rank":6,"name":"inursha","points":340,"percentile":24.41,"wins":27,"losses":16,"maxPoints":1700,"remainingPoints":1360,"r64Points":200,"r32Points":140,"champion":"DUKE","championName":"Duke Blue Devils","competitorId":150,"chalk":75,"uniqueness":13},{"rank":7,"name":"ESPNFAN8289368577","points":340,"percentile":24.41,"wins":29,"losses":17,"maxPoints":1420,"remainingPoints":1080,"r64Points":240,"r32Points":100,"champion":"DUKE","championName":"Duke Blue Devils","competitorId":150,"chalk":83,"uniqueness":11},{"rank":8,"name":"ESPNFAN9699154365","points":310,"percentile":14.62,"wins":27,"losses":16,"maxPoints":1670,"remainingPoints":1360,"r64Points":230,"r32Points":80,"champion":"DUKE","championName":"Duke Blue Devils","competitorId":150,"chalk":68,"uniqueness":17}];
       const table = document.getElementById('similarityTable');
 
+      // Multi-color gradient function: 60%=deep blue → 75%=teal → 85%=gold → 95%=red → 100%=bright red
+      function heatColor(pct) {
+        if (pct === 100) return { bg: '#27455C', text: '#fff' }; // self = navy
+        const stops = [
+          { at: 60, r: 59, g: 130, b: 186 },   // cool blue
+          { at: 70, r: 72, g: 175, b: 160 },    // teal
+          { at: 78, r: 212, g: 168, b: 67 },    // gold
+          { at: 86, r: 230, g: 120, b: 50 },    // orange
+          { at: 95, r: 220, g: 26, b: 65 }      // red
+        ];
+        if (pct <= stops[0].at) return { bg: 'rgb(' + stops[0].r + ',' + stops[0].g + ',' + stops[0].b + ')', text: '#fff' };
+        if (pct >= stops[stops.length-1].at) return { bg: 'rgb(' + stops[stops.length-1].r + ',' + stops[stops.length-1].g + ',' + stops[stops.length-1].b + ')', text: '#fff' };
+        for (var k = 0; k < stops.length - 1; k++) {
+          if (pct >= stops[k].at && pct <= stops[k+1].at) {
+            var t = (pct - stops[k].at) / (stops[k+1].at - stops[k].at);
+            var r = Math.round(stops[k].r + t * (stops[k+1].r - stops[k].r));
+            var g = Math.round(stops[k].g + t * (stops[k+1].g - stops[k].g));
+            var b = Math.round(stops[k].b + t * (stops[k+1].b - stops[k].b));
+            return { bg: 'rgb(' + r + ',' + g + ',' + b + ')', text: '#fff' };
+          }
+        }
+        return { bg: '#ccc', text: '#333' };
+      }
+
       // Header row
-      let headerRow = '<tr><th style="border: none;"></th>';
+      let headerRow = '<tr><th style="border:none; background:transparent;"></th>';
       standings.forEach(s => {
-        headerRow += '<th style="text-align: center; border: none; font-size: 0.8rem;">' + s.name.substring(0, 8) + '</th>';
+        headerRow += '<th style="text-align:center; border:none; background:transparent; font-size:0.75rem; font-weight:600; color:#27455C; padding:8px 6px; writing-mode:vertical-lr; transform:rotate(180deg); height:90px;">' + s.name.substring(0, 10) + '</th>';
       });
       headerRow += '</tr>';
       table.innerHTML += headerRow;
 
       // Data rows
       standings.forEach((s, i) => {
-        let row = '<tr><th style="border: none; font-size: 0.8rem; text-align: right;">' + s.name.substring(0, 8) + '</th>';
+        let row = '<tr><th style="border:none; background:transparent; font-size:0.8rem; text-align:right; font-weight:600; color:#27455C; padding:8px 10px; white-space:nowrap;">' + s.name.substring(0, 10) + '</th>';
         standings.forEach((_, j) => {
-          const sim = i === j ? 100 : Math.floor(Math.random() * 30 + 60);
-          const opacity = sim / 100;
-          const bgColor = 'rgba(220, 26, 65, ' + opacity + ')';
-          row += '<td style="background: ' + bgColor + '; text-align: center; border: 1px solid #ddd; color: white; font-weight: 600; font-size: 0.8rem;">' + sim + '%</td>';
+          var sim = i === j ? 100 : Math.floor(Math.random() * 30 + 60);
+          var c = heatColor(sim);
+          var cellStyle = 'background:' + c.bg + '; color:' + c.text + '; text-align:center; font-weight:700; font-size:0.8rem; padding:10px 8px; border:2px solid #F8F3F0; border-radius:4px;';
+          if (i === j) cellStyle += ' box-shadow:inset 0 0 0 2px rgba(255,255,255,0.4);';
+          row += '<td style="' + cellStyle + '">' + sim + '%</td>';
         });
         row += '</tr>';
         table.innerHTML += row;
