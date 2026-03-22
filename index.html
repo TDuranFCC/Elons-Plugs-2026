@@ -851,6 +851,7 @@
   </div>
 
   <script>
+  window.addEventListener('DOMContentLoaded', function() {
     // Chart defaults
     Chart.register(ChartDataLabels);
     Chart.defaults.font.family = "'Inter', sans-serif";
@@ -1209,6 +1210,7 @@
         row.style.display = playerName.includes(searchTerm) ? '' : 'none';
       });
     });
+  }); // end DOMContentLoaded
   </script>
 </body>
 </html>
